@@ -7,8 +7,6 @@ from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Border, Side, Alignment
 import re
 
-#수정 사항 예시 커밋 2024-10-29-11:25
-
 # 결전 변수 및 스타일 정의
 first_file_path, first_file_data = None, None
 yellow_fill, blue_fill = PatternFill(start_color="FFFF00", fill_type="solid"), PatternFill(start_color="87CEEB", fill_type="solid")
