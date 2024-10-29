@@ -6,6 +6,7 @@ from datetime import datetime
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Border, Side, Alignment
 import re
+#asdgsdagwgaw
 
 # 결전 변수 및 스타일 정의
 first_file_path, first_file_data = None, None
