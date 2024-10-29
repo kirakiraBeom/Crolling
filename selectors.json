@@ -1,0 +1,266 @@
+{
+    "벤오토": {
+        "url": "https://smartstore.naver.com/benauto",
+        "selectors": {
+            "메인대문 개수": "//a[span[text()='1']]",
+            "스토어 등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "메이튼": {
+        "url": "https://brand.naver.com/mayton",
+        "selectors": {
+            "메인대문": "//button[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "벤딕트": {
+        "url": "https://brand.naver.com/vendict",
+        "selectors": {
+            "메인대문": "//button[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "케이엠모터스": {
+        "url": "https://brand.naver.com/kmmotors",
+        "selectors": {
+            "메인대문": "//button[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "지엠지모터스": {
+        "url": "https://brand.naver.com/gmzmotors",
+        "selectors": {
+            "메인대문": "//button[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "본투로드": {
+        "url": "https://brand.naver.com/motorlife",
+        "selectors": {
+            "메인대문": "//button[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "가온": {
+        "url": "https://brand.naver.com/gaoncarmat",
+        "selectors": {
+            "메인대문": "//button[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "아임반": {
+        "url": "https://brand.naver.com/aimban",
+        "selectors": {
+            "메인대문": "//button[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "돌비웨이": {
+        "url": "https://brand.naver.com/dolbiway",
+        "selectors": {
+            "메인대문": "//button[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "카멜레온360": {
+        "url": "https://brand.naver.com/chameleon360",
+        "selectors": {
+            "메인대문": "//button[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "주파집": {
+        "url": "https://brand.naver.com/jupazip",
+        "selectors": {
+            "메인대문": "//button[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "유투카": {
+        "url": "https://smartstore.naver.com/youtocar",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "세이보링": {
+        "url": "https://smartstore.naver.com/savoring",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "안녕하십니카": {
+        "url": "https://smartstore.naver.com/annyeongcar",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "킨톤": {
+        "url": "https://smartstore.naver.com/create1988",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "발상코퍼레이션": {
+        "url": "https://smartstore.naver.com/superliving",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "데코M": {
+        "url": "https://smartstore.naver.com/deco-m",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "이지스오토랩": {
+        "url": "https://smartstore.naver.com/aegisautolab",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "기가차스토어": {
+        "url": "https://smartstore.naver.com/gigachastore",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "테스트드라이브": {
+        "url": "https://smartstore.naver.com/testdrive",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "트니르": {
+        "url": "https://smartstore.naver.com/tenir_",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    },
+    "더레이즈": {
+        "url": "https://smartstore.naver.com/theraise",
+        "selectors": {
+            "메인대문": "//a[span[text()='1']]",
+            "스토어등급": "//div[@class='store-rating']",
+            "관심고객": "//div[@class='customer-count']",
+            "인기TOP10 제품명": "//div[@class='top10']",
+            "카테고리 목록": "//ul[@class='category-list']/li",
+            "최신등록순 제품명": "//div[@class='latest-products']/div",
+            "전체상품 개수": "//div[@class='total-products']"
+        }
+    }
+}
