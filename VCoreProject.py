@@ -21,29 +21,33 @@ chrome_options.add_argument("disable-blink-features=AutomationControlled")
 
 def crawl_and_login(url):
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    blog_links = []  # 링크를 저장할 리스트
 
     try:
         # 1. 사용자가 입력한 URL로 이동
         driver.get(url)
+        print("URL로 이동 중...")
 
         # 2. 페이지 로딩 대기
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="password"]')))
+        print("비밀번호 입력 필드가 로드되었습니다.")
 
         # 3. 비밀번호 입력 필드 찾기
         text_input = driver.find_element(By.CSS_SELECTOR, 'input[type="password"]')
 
         # 4. '3605' 입력
-        text_input.send_keys('3605')  # 바로 타이핑
+        text_input.send_keys('3605')  # 비밀번호 입력
+        print("비밀번호 입력 완료.")
 
         # 5. 비밀번호 제출
         text_input.send_keys(Keys.RETURN)
+        print("비밀번호 제출 중...")
 
         # 6. 페이지 로딩 대기
         time.sleep(5)
 
         # 7. 블로그보기 링크 추출
         rows = driver.find_elements(By.CSS_SELECTOR, "table.table tbody tr")
+        blog_links = []
         for row in rows:
             link_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(2) a")
             blog_link = link_element.get_attribute("href")
@@ -54,24 +58,16 @@ def crawl_and_login(url):
         log_text.delete(1.0, tk.END)
         log_text.insert(tk.END, log_output)
 
-        # 9. 새로운 페이지로 이동
+        # 9. 블로그 진단 페이지로 이동
         driver.get("https://lablog.co.kr/dashboard")
+        print("블로그 진단 페이지로 이동 중...")
 
         # 10. 현재 URL 확인
+        WebDriverWait(driver, 10).until(EC.url_to_be("https://lablog.co.kr/dashboard"))
         current_url = driver.current_url
+        
         if current_url == "https://lablog.co.kr/dashboard":
-            print("자동 로그인 상태입니다. 블로그 진단 버튼을 클릭합니다.")
-            time.sleep(2)
-            # 14. 블로그 진단 버튼 클릭 (JavaScript 사용)
-            blog_diagnose_button = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, "//a[contains(@href, '/blog/blogDiagnose')]"))
-            )
-            driver.execute_script("arguments[0].click();", blog_diagnose_button)  # JavaScript로 클릭
-            
-            # 블로그 진단 페이지로 이동 후 대기
-            print("블로그 진단 페이지로 이동 중...")
-            time.sleep(5)  # 5초 대기
-            print("진단 페이지에서 작업을 계속 진행하세요.")
+            print("자동 로그인 상태입니다.")
         else:
             print("로그인 상태가 아닙니다. 로그인 절차를 진행합니다.")
             # 11. 구글 로그인 버튼 클릭 (네 번째 버튼)
@@ -84,7 +80,7 @@ def crawl_and_login(url):
             # 12. 새로운 창으로 전환
             WebDriverWait(driver, 10).until(EC.number_of_windows_to_be(2))
             original_window = driver.current_window_handle
-
+            
             for handle in driver.window_handles:
                 if handle != original_window:
                     driver.switch_to.window(handle)
@@ -94,11 +90,59 @@ def crawl_and_login(url):
             email_input = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.NAME, "identifier"))
             )
-            email_input.send_keys('marketing11111111111@gmail.com')  # 바로 타이핑
+            email_input.send_keys('marketing11111111111@gmail.com')  # 이메일 입력
             email_input.send_keys(Keys.RETURN)
 
             # 14. 비밀번호 입력을 위한 대기 (사용자가 직접 입력)
             print("비밀번호를 입력하세요. 브라우저는 닫히지 않습니다.")
+
+            # 15. 로그인 후 블로그 진단 페이지로 이동
+            WebDriverWait(driver, 10).until(EC.url_to_be("https://lablog.co.kr/dashboard"))
+
+        # 16. 블로그 진단 버튼 클릭
+        blog_diagnose_button = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//a[contains(@href, '/blog/blogDiagnose')]"))
+        )
+        driver.execute_script("arguments[0].click();", blog_diagnose_button)  # JavaScript로 클릭
+        
+        # 블로그 진단 페이지로 이동 후 대기
+        print("블로그 진단 페이지로 이동 중...")
+        time.sleep(5)  # 5초 대기
+
+        # 17. 블로그 링크 입력 및 검색
+        for index, blog_link in enumerate(blog_links):
+            try:
+                if blog_link.startswith("https://"):  # https로 시작하는지 확인
+                    # 입력 필드에 URL 입력
+                    input_field = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text']"))
+                    )
+                    
+                    # 기존 값을 완전히 지우기
+                    driver.execute_script("arguments[0].value = '';", input_field)  # JavaScript로 값 제거
+
+                    # URL 입력
+                    input_field.send_keys(blog_link)  # 블로그 링크 입력
+                    print(f"'{blog_link}' 입력 중...")
+
+                    # 검색 버튼 클릭
+                    search_button = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "//button[contains(@class, 'MuiButton-containedPrimary')]"))
+                    )
+                    search_button.click()
+
+                    # 페이지 이동 대기
+                    print(f"'{blog_link}' 검색 중...")
+                    WebDriverWait(driver, 10).until(EC.url_changes(driver.current_url))  # URL 변경 대기
+
+                    # 페이지 이동 후 3초 대기
+                    print("페이지 이동 완료. 3초 대기 중...")
+                    time.sleep(3)
+
+            except Exception as e:
+                print(f"오류 발생: {e} - 인덱스 {index}의 블로그 링크: {blog_link}")
+
+        print("모든 블로그 링크에 대해 검색을 완료했습니다.")
 
     except Exception as e:
         print(f"오류 발생: {e}")
