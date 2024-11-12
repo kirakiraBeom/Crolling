@@ -60,44 +60,56 @@ def crawl_and_login(url):
 
         # 9. 블로그 진단 페이지로 이동
         driver.get("https://lablog.co.kr/dashboard")
-        print("블로그 진단 페이지로 이동 중...")
+        print("블로그 진단 페이지로 이동 중...(확인 전)")
 
         # 10. 현재 URL 확인
-        WebDriverWait(driver, 10).until(EC.url_to_be("https://lablog.co.kr/dashboard"))
-        current_url = driver.current_url
-        
-        if current_url == "https://lablog.co.kr/dashboard":
-            print("자동 로그인 상태입니다.")
-        else:
-            print("로그인 상태가 아닙니다. 로그인 절차를 진행합니다.")
-            # 11. 구글 로그인 버튼 클릭 (네 번째 버튼)
-            driver.get("https://lablog.co.kr/")  # 로그인 페이지로 돌아가기
-            google_login_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "(//button[contains(@class, 'MuiButton-root')])[4]"))
-            )
-            google_login_button.click()
-
-            # 12. 새로운 창으로 전환
-            WebDriverWait(driver, 10).until(EC.number_of_windows_to_be(2))
-            original_window = driver.current_window_handle
-            
-            for handle in driver.window_handles:
-                if handle != original_window:
-                    driver.switch_to.window(handle)
-
-            # 13. 구글 로그인 페이지에서 ID 입력
-            time.sleep(2)
-            email_input = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.NAME, "identifier"))
-            )
-            email_input.send_keys('marketing11111111111@gmail.com')  # 이메일 입력
-            email_input.send_keys(Keys.RETURN)
-
-            # 14. 비밀번호 입력을 위한 대기 (사용자가 직접 입력)
-            print("비밀번호를 입력하세요. 브라우저는 닫히지 않습니다.")
-
-            # 15. 로그인 후 블로그 진단 페이지로 이동
+        try:
             WebDriverWait(driver, 10).until(EC.url_to_be("https://lablog.co.kr/dashboard"))
+            current_url = driver.current_url
+            
+            # URL이 대시보드로 변경되었는지 확인
+            if "dashboard" in current_url:
+                print("자동 로그인 상태입니다.")
+            else:
+                print("로그인 상태가 아닙니다. 로그인 절차를 진행합니다.")
+                # 11. 구글 로그인 버튼 클릭 (네 번째 버튼)
+                driver.get("https://lablog.co.kr/")  # 로그인 페이지로 돌아가기
+                
+                # 페이지가 로드될 때까지 대기
+                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//button[contains(@class, 'MuiButton-root')]")))
+                try:
+                    google_login_button = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "(//button[contains(@class, 'MuiButton-root')])[4]"))
+                    )
+                    google_login_button.click()
+                    print("구글 로그인 버튼 클릭 완료.")
+                except Exception as e:
+                    print(f"구글 로그인 버튼 클릭 실패: {e}")
+
+                # 12. 새로운 창으로 전환
+                WebDriverWait(driver, 10).until(EC.number_of_windows_to_be(2))
+                original_window = driver.current_window_handle
+                
+                for handle in driver.window_handles:
+                    if handle != original_window:
+                        driver.switch_to.window(handle)
+
+                # 13. 구글 로그인 페이지에서 ID 입력
+                time.sleep(2)
+                email_input = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.NAME, "identifier"))
+                )
+                email_input.send_keys('marketing11111111111@gmail.com')  # 이메일 입력
+                email_input.send_keys(Keys.RETURN)
+
+                # 14. 비밀번호 입력을 위한 대기 (사용자가 직접 입력)
+                print("비밀번호를 입력하세요. 브라우저는 닫히지 않으니 입력 후 진행하세요.")
+
+                # 15. 로그인 후 블로그 진단 페이지로 이동
+                WebDriverWait(driver, 10).until(EC.url_to_be("https://lablog.co.kr/dashboard"))
+
+        except Exception as e:
+            print(f"로그인 상태 확인 중 오류 발생: {e}")
 
         # 16. 블로그 진단 버튼 클릭
         blog_diagnose_button = WebDriverWait(driver, 10).until(
