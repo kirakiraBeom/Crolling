@@ -47,6 +47,27 @@ def save_to_excel(blog_ids, nicknames, remarks, blog_links, blog_level, visitors
         ws.cell(row=index, column=6, value=category[index - 2] if index - 2 < len(category) else "")
         ws.cell(row=index, column=7, value=remark)
         ws.cell(row=index, column=8, value=blog_link)
+        
+    # 각 열의 최대 너비를 계산하고 자동으로 너비 설정
+    for col in ws.columns:
+        max_length = 0
+        col_letter = col[0].column_letter  # Get the column letter
+
+        for cell in col:
+            try:
+                if cell.value:
+                    # 셀의 내용을 줄바꿈 기준으로 분리하고, 가장 긴 줄의 길이를 계산
+                    cell_lines = str(cell.value).splitlines()
+                    max_length = max(max_length, *[len(line) for line in cell_lines])
+            except:
+                pass
+
+        # Adjust the column width based on max_length (slightly padded for readability)
+        adjusted_width = max_length + 2
+        ws.column_dimensions[col_letter].width = adjusted_width
+
+    # 비고 열(G)의 너비를 강제로 30으로 설정 (필요에 따라 값 조정 가능)
+    ws.column_dimensions['G'].width = 20.88
 
     global filename
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -65,6 +86,30 @@ def update_excel_with_diagnosis(blog_level, visitors, category):
         ws.cell(row=i, column=5, value=visitor)
         ws.cell(row=i, column=6, value=cat)
     
+    # 각 열의 최대 너비를 계산하고 자동으로 너비 설정
+    for col in ws.columns:
+        max_length = 0
+        col_letter = col[0].column_letter  # Get the column letter
+
+        for cell in col:
+            try:
+                if cell.value:
+                    # 셀의 내용을 줄바꿈 기준으로 분리하고, 가장 긴 줄의 길이를 계산
+                    cell_lines = str(cell.value).splitlines()
+                    max_length = max(max_length, *[len(line) for line in cell_lines])
+            except:
+                pass
+
+        # Adjust the column width based on max_length (slightly padded for readability)
+        adjusted_width = max_length + 2
+        ws.column_dimensions[col_letter].width = adjusted_width
+
+    # 비고 열(G)의 너비를 20.88로 강제 설정
+    ws.column_dimensions['G'].width = 20.88
+    
+    # 비고 열(F)의 너비를 8.75로 강제 설정
+    ws.column_dimensions['F'].width = 8.75
+
     wb.save(filename)
     print(f"엑셀 파일 '{filename}'에 진단 결과가 덮어씌워졌습니다.")
 
@@ -257,7 +302,7 @@ def goto_blog_diagnosis(driver):
             print(f"데이터 추출 중 오류 발생: {e}")
 
         # 5초 대기 후 다음 ID로 이동
-        time.sleep(5)
+        time.sleep(1)
 
     # 추출된 데이터 업데이트
     update_excel_with_diagnosis(blog_level, visitors, category)
