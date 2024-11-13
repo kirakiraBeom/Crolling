@@ -1,3 +1,6 @@
+# https://xn--939au0g4vj8sq.net/rq/?k=MTU1NDYwNg==
+# https://xn--939au0g4vj8sq.net/rq/?k=MTU2NzYwMA==
+
 import tkinter as tk
 from tkinter import font, scrolledtext
 from selenium import webdriver
@@ -18,8 +21,7 @@ chrome_options = Options()
 # 데이터 기억 옵션 추가
 chrome_options.add_argument("user-data-dir=C:\\VCP")  # 사용자 데이터 디렉토리 설정
 chrome_options.add_argument("disable-blink-features=AutomationControlled")
-chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36")
-
+# chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36")
 
 def crawl_and_login(url):
     driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -64,11 +66,11 @@ def crawl_and_login(url):
             blog_id = blog_link.split("/")[-1]
             blog_ids.append(blog_id)
 
-            # 주소와 연락처 추출
-            address = row.find_element(By.CSS_SELECTOR, "td:nth-child(5)").text
-            contact = row.find_element(By.CSS_SELECTOR, "td:nth-child(4)").text
-            addresses.append(address)
-            contacts.append(contact)
+            # # 주소와 연락처 추출
+            # address = row.find_element(By.CSS_SELECTOR, "td:nth-child(5)").text
+            # contact = row.find_element(By.CSS_SELECTOR, "td:nth-child(4)").text
+            # addresses.append(address)
+            # contacts.append(contact)
 
         # 8. 추출한 블로그 링크를 로그에 표시
         log_output = "\n".join(blog_ids)
@@ -112,6 +114,10 @@ def start_research():
             if handle != original_window:
                 driver.switch_to.window(handle)
                 break
+        else:
+            print("새 창이 열리지 않았습니다.")
+            return  # 새 창이 열리지 않으면 종료
+
         print("새 창으로 전환 완료.")
 
         # 6. 로그인 페이지에서 이메일 입력 대기 및 입력
