@@ -1,1 +1,6 @@
+# Ignore Excel files
 *.xlsx
+
+# Ignore build and dist folders
+build/
+dist/

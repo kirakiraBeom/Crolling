@@ -19,9 +19,7 @@ import datetime
 driver_path = "C:\\Program Files\\SeleniumBasic\\chromedriver.exe"
 service = Service(driver_path)
 chrome_options = Options()
-
-# 데이터 기억 옵션 추가
-chrome_options.add_argument("user-data-dir=C:\\VCP")  # 사용자 데이터 디렉토리 설정
+chrome_options.add_argument("user-data-dir=C:\\VCP")
 chrome_options.add_argument("disable-blink-features=AutomationControlled")
 
 # 초기 엑셀 파일 저장 함수
@@ -39,7 +37,7 @@ def save_to_excel(blog_ids, nicknames, remarks, blog_links, blog_level, visitors
     ws['H1'] = "블로그주소"
 
     for index, (blog_id, nickname, remark, blog_link) in enumerate(zip(blog_ids, nicknames, remarks, blog_links), start=2):
-        ws.cell(row=index, column=1, value="")  # 이름 (비워둠)
+        ws.cell(row=index, column=1, value="")
         ws.cell(row=index, column=2, value=nickname)
         ws.cell(row=index, column=3, value=blog_id)
         ws.cell(row=index, column=4, value=blog_level[index - 2] if index - 2 < len(blog_level) else "")
@@ -47,26 +45,19 @@ def save_to_excel(blog_ids, nicknames, remarks, blog_links, blog_level, visitors
         ws.cell(row=index, column=6, value=category[index - 2] if index - 2 < len(category) else "")
         ws.cell(row=index, column=7, value=remark)
         ws.cell(row=index, column=8, value=blog_link)
-        
+
     # 각 열의 최대 너비를 계산하고 자동으로 너비 설정
     for col in ws.columns:
         max_length = 0
-        col_letter = col[0].column_letter  # Get the column letter
-
+        col_letter = col[0].column_letter
         for cell in col:
-            try:
-                if cell.value:
-                    # 셀의 내용을 줄바꿈 기준으로 분리하고, 가장 긴 줄의 길이를 계산
-                    cell_lines = str(cell.value).splitlines()
-                    max_length = max(max_length, *[len(line) for line in cell_lines])
-            except:
-                pass
-
-        # Adjust the column width based on max_length (slightly padded for readability)
+            if cell.value:
+                cell_lines = str(cell.value).splitlines()
+                max_length = max(max_length, *[len(line) for line in cell_lines])
         adjusted_width = max_length + 2
         ws.column_dimensions[col_letter].width = adjusted_width
 
-    # 비고 열(G)의 너비를 강제로 30으로 설정 (필요에 따라 값 조정 가능)
+    # 비고 열(G)의 너비를 20.88로 설정
     ws.column_dimensions['G'].width = 20.88
 
     global filename
@@ -85,29 +76,21 @@ def update_excel_with_diagnosis(blog_level, visitors, category):
         ws.cell(row=i, column=4, value=level)
         ws.cell(row=i, column=5, value=visitor)
         ws.cell(row=i, column=6, value=cat)
-    
-    # 각 열의 최대 너비를 계산하고 자동으로 너비 설정
+
+    # 열 너비 조정
     for col in ws.columns:
         max_length = 0
-        col_letter = col[0].column_letter  # Get the column letter
-
+        col_letter = col[0].column_letter
         for cell in col:
-            try:
-                if cell.value:
-                    # 셀의 내용을 줄바꿈 기준으로 분리하고, 가장 긴 줄의 길이를 계산
-                    cell_lines = str(cell.value).splitlines()
-                    max_length = max(max_length, *[len(line) for line in cell_lines])
-            except:
-                pass
-
-        # Adjust the column width based on max_length (slightly padded for readability)
+            if cell.value:
+                cell_lines = str(cell.value).splitlines()
+                max_length = max(max_length, *[len(line) for line in cell_lines])
         adjusted_width = max_length + 2
         ws.column_dimensions[col_letter].width = adjusted_width
 
-    # 비고 열(G)의 너비를 20.88로 강제 설정
+    # 비고 열(G)의 너비를 20.88로 설정
     ws.column_dimensions['G'].width = 20.88
-    
-    # 비고 열(F)의 너비를 8.75로 강제 설정
+    # 카테고리 열(F)의 너비를 8.75로 설정
     ws.column_dimensions['F'].width = 8.75
 
     wb.save(filename)
@@ -116,7 +99,6 @@ def update_excel_with_diagnosis(blog_level, visitors, category):
 # 크롤링 및 로그인 함수
 def crawl_and_login(url):
     driver = webdriver.Chrome(service=service, options=chrome_options)
-
     try:
         driver.get(url)
         print("URL로 이동 중...")
@@ -140,7 +122,6 @@ def crawl_and_login(url):
         category = []
 
         blog_elements = driver.find_elements(By.CSS_SELECTOR, "a.sns_btn")
-        
         for link_element in blog_elements:
             blog_link = link_element.get_attribute("href")
             blog_links.append(blog_link)
@@ -167,19 +148,19 @@ def crawl_and_login(url):
                 remarks.append("")
 
         log_output = "\n".join(blog_ids)
+        log_text.config(state="normal")
         log_text.delete(1.0, tk.END)
         log_text.insert(tk.END, log_output)
+        log_text.config(state="disabled")
 
         print("블로그 링크가 성공적으로 추출되었습니다.")
         save_to_excel(blog_ids, nicknames, remarks, blog_links, blog_level, visitors, category)
-
     finally:
         driver.quit()
 
 # 연구 시작 함수
-def start_research():
+def research_task():
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    
     try:
         driver.get("https://lablog.co.kr/")
         print("연구 사이트로 이동 중...")
@@ -221,13 +202,11 @@ def start_research():
         time.sleep(2)
 
         goto_blog_diagnosis(driver)
-    
     finally:
-        pass
+        driver.quit()
 
 def goto_blog_diagnosis(driver):
     try:
-        # "다시보지않기" 버튼이 있으면 클릭
         dont_show_again_button = WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable((By.XPATH, "//*[text()='다시보지않기']"))
         )
@@ -236,87 +215,78 @@ def goto_blog_diagnosis(driver):
     except Exception:
         print("다시보지않기 버튼이 없습니다. 진행합니다.")
 
-    # "블로그 진단" 버튼을 찾아 클릭
     blog_diagnosis_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//*[text()='블로그 진단']"))
     )
     blog_diagnosis_button.click()
     print("블로그 진단 버튼 클릭 완료.")
 
-    # 입력 필드 초기화 및 값 입력 반복
     input_field = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputSizeSmall.css-2ozrrz"))
     )
-    input_field.click()  # 입력 필드 클릭
+    input_field.click()
     print("입력 필드 클릭 완료.")
 
-    # 로그에서 블로그 ID 목록 가져오기
     log_items = log_text.get("1.0", tk.END).strip().split("\n")
 
-    # 데이터를 저장할 리스트
     blog_level = []
     visitors = []
     category = []
     
-    # 각 블로그 ID를 입력하고 진단 버튼 클릭 후 데이터 추출
     for item in log_items:
         input_field.click()
-        
-        # 필드 초기화 (3초 동안 백스페이스 누름)
         start_time = time.time()
         while time.time() - start_time < 3:
             input_field.send_keys(Keys.BACKSPACE)
-
-        # 블로그 ID 입력
         input_field.send_keys(item)
         print(f"'{item}' 입력 완료.")
 
-        # 진단 버튼 클릭
         action_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, ".MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-fullWidth.css-9nd1ol"))
         )
         action_button.click()
         print("액션 버튼 클릭 완료.")
 
-        # 로딩바가 사라질 때까지 대기
         WebDriverWait(driver, 30).until_not(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".MuiLinearProgress-root.MuiLinearProgress-colorSecondary.MuiLinearProgress-determinate.css-1hbgb9z"))
         )
         print("진단 완료 후 데이터 추출 준비")
 
-        # 데이터 추출
         try:
-            # 블로그 지수 추출
-            level_element = driver.find_element(By.CSS_SELECTOR, "text.apexcharts-datalabel")
-            level_text = level_element.text.split(": ")[1] if ": " in level_element.text else ""
-            blog_level.append(level_text)
+            level_elements = driver.find_elements(By.CSS_SELECTOR, "text.apexcharts-datalabel")
+            if level_elements:
+                level_text = level_elements[0].text.split(": ")[1] if ": " in level_elements[0].text else ""
+                blog_level.append(level_text)
+            else:
+                blog_level.append("N/A")
 
-            # 방문자 수 추출
             visitor_element = driver.find_element(By.CSS_SELECTOR, "input[aria-invalid='false'][id^=':rn:']")
             visitors.append(visitor_element.get_attribute("value"))
 
-            # 카테고리 추출
             category_element = driver.find_element(By.CSS_SELECTOR, "input[aria-invalid='false'][id^=':rd:']")
             category.append(category_element.get_attribute("value"))
         except Exception as e:
             print(f"데이터 추출 중 오류 발생: {e}")
+            blog_level.append("N/A")
+            visitors.append("N/A")
+            category.append("N/A")
 
-        # 5초 대기 후 다음 ID로 이동
         time.sleep(1)
 
-    # 추출된 데이터 업데이트
     update_excel_with_diagnosis(blog_level, visitors, category)
-
 
 def on_submit():
     url = url_entry.get()
     threading.Thread(target=crawl_and_login, args=(url,)).start()
 
-# GUI 설정
+def start_research():
+    threading.Thread(target=research_task).start()
+
 root = tk.Tk()
 root.title("크롤링 프로그램")
 root.geometry("550x550")
 root.configure(bg="#f0f0f0")
+root.resizable(width=False, height=False)
 
 title_font = font.Font(family="Helvetica", size=16, weight="bold")
 label_font = font.Font(family="Helvetica", size=12)
@@ -337,7 +307,7 @@ submit_button.pack(pady=20)
 log_label = tk.Label(root, text="추출한 블로그ID:", font=label_font, bg="#f0f0f0", fg="#333")
 log_label.pack(pady=5)
 
-log_text = scrolledtext.ScrolledText(root, width=58, height=10, font=label_font)
+log_text = scrolledtext.ScrolledText(root, width=58, height=10, font=label_font, state="disabled")
 log_text.pack(pady=5)
 
 research_button = tk.Button(root, text="연구시작", command=start_research, font=button_font, bg="#FF5733", fg="white", padx=10, pady=5)
