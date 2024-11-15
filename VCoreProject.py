@@ -266,6 +266,7 @@ def goto_blog_diagnosis(driver):
     blog_level = []
     visitors = []
     category = []
+    failed_items = []  # 실패한 ID를 저장할 리스트
 
     # 각 블로그 ID를 입력하고 진단 버튼 클릭 후 데이터 추출
     for item in log_items:
@@ -311,12 +312,62 @@ def goto_blog_diagnosis(driver):
 
         except Exception as e:
             print(f"데이터 추출 중 오류 발생: {e}")
-            # 만약 추출이 실패하면 "N/A" 추가
+            # 만약 추출이 실패하면 "N/A" 추가하고, 해당 ID를 실패 목록에 추가
             blog_level.append("N/A")
             visitors.append("N/A")
             category.append("N/A")
+            failed_items.append(item)
 
         print(f"지수: {blog_level[-1]}, 방문자수: {visitors[-1]}, 블로그주제: {category[-1]}")
+
+    # 실패한 ID들을 다시 시도
+    for item in failed_items:
+        print(f"재시도 중: {item}")
+        input_field.click()
+
+        # 필드 초기화 (3초 동안 백스페이스 누름)
+        start_time = time.time()
+        while time.time() - start_time < 3:
+            input_field.send_keys(Keys.BACKSPACE)
+
+        # 블로그 ID 입력
+        input_field.send_keys(item)
+        print(f"'{item}' 재시도 입력 완료.")
+
+        # 진단 버튼 클릭
+        action_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, ".MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-fullWidth.css-9nd1ol"))
+        )
+        action_button.click()
+        print("재시도 액션 버튼 클릭 완료.")
+
+        # 로딩바가 사라질 때까지 대기
+        WebDriverWait(driver, 60).until_not(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".MuiLinearProgress-root.MuiLinearProgress-colorSecondary.MuiLinearProgress-determinate.css-1hbgb9z"))
+        )
+        print("진단 완료 후 재시도 데이터 추출 준비")
+
+        # 데이터 추출
+        try:
+            level_element = driver.find_element(By.CSS_SELECTOR, "text.apexcharts-datalabel")
+            blog_level_text = level_element.text.split(": ")[1] if ": " in level_element.text else "N/A"
+            blog_level[log_items.index(item)] = blog_level_text
+
+            visitor_elements = driver.find_elements(By.CSS_SELECTOR, ".MuiFormControl-root.MuiFormControl-fullWidth.MuiTextField-root.css-ciaeuc")
+            if len(visitor_elements) >= 7:
+                visitor_value = visitor_elements[6].find_element(By.CSS_SELECTOR, "input").get_attribute("value")
+                visitors[log_items.index(item)] = visitor_value
+
+            category_elements = driver.find_elements(By.CSS_SELECTOR, ".MuiFormControl-root.MuiFormControl-fullWidth.MuiTextField-root.css-ciaeuc")
+            if len(category_elements) >= 2:
+                category_value = category_elements[1].find_element(By.CSS_SELECTOR, "input").get_attribute("value")
+                category[log_items.index(item)] = category_value
+
+        except Exception as e:
+            print(f"재시도 데이터 추출 중 오류 발생: {e}")
+            blog_level[log_items.index(item)] = "N/A"
+            visitors[log_items.index(item)] = "N/A"
+            category[log_items.index(item)] = "N/A"
 
     # 추출된 데이터 업데이트
     update_excel_with_diagnosis(blog_level, visitors, category)
