@@ -16,14 +16,26 @@ import threading
 import openpyxl
 import datetime
 import re
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+# 파일 상단에 상수 정의
+CHROME_DRIVER_PATH = "C:\\Program Files\\SeleniumBasic\\chromedriver.exe"
+USER_DATA_DIR = "C:\\VCP"
+LOGIN_EMAIL = "marketing11111111111@gmail.com"
+PASSWORD = "3605"
 
 # 크롬 드라이버 설정
-driver_path = "C:\\Program Files\\SeleniumBasic\\chromedriver.exe"
+driver_path = CHROME_DRIVER_PATH
 service = Service(driver_path)
 chrome_options = Options()
 
 # 데이터 기억 옵션 추가
-chrome_options.add_argument("user-data-dir=C:\\VCP")  # 사용자 데이터 디렉토리 설정
+chrome_options.add_argument("user-data-dir=" + USER_DATA_DIR)  # 사용자 데이터 디렉토리 설정
 chrome_options.add_argument("disable-blink-features=AutomationControlled")
 
 # 초기 엑셀 파일 저장 함수
@@ -76,7 +88,7 @@ def save_to_excel(blog_ids, nicknames, remarks, blog_links, blog_level, visitors
     filename = f"blog_data_{timestamp}.xlsx"
     
     wb.save(filename)
-    print(f"엑셀 파일 '{filename}'에 데이터가 저장되었습니다.")
+    logging.info(f"엑셀 파일 '{filename}'에 데이터가 저장되었습니다.")
 
 # 진단 데이터 덮어쓰기 함수
 def update_excel_with_diagnosis(blog_level, visitors, category):
@@ -113,7 +125,7 @@ def update_excel_with_diagnosis(blog_level, visitors, category):
     ws.column_dimensions['F'].width = 8.75
 
     wb.save(filename)
-    print(f"엑셀 파일 '{filename}'에 진단 결과가 덮어씌워졌습니다.")
+    logging.info(f"엑셀 파일 '{filename}'에 진단 결과가 덮어씌워졌습니다.")
     
 # 블로그 ID 추출 함수
 def extract_blog_id(url):
@@ -128,15 +140,15 @@ def crawl_and_login(url):
     driver = webdriver.Chrome(service=service, options=chrome_options)
     try:
         driver.get(url)
-        print("URL로 이동 중...")
+        logging.info("URL로 이동 중...")
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="password"]')))
-        print("비밀번호 입력 필드가 로드되었습니다.")
+        logging.info("비밀번호 입력 필드가 로드되었습니다.")
 
         text_input = driver.find_element(By.CSS_SELECTOR, 'input[type="password"]')
-        text_input.send_keys('3605')
-        print("비밀번호 입력 완료.")
+        text_input.send_keys(PASSWORD)
+        logging.info("비밀번호 입력 완료.")
         text_input.send_keys(Keys.RETURN)
-        print("비밀번호 제출 중...")
+        logging.info("비밀번호 제출 중...")
 
         time.sleep(5)
 
@@ -164,7 +176,7 @@ def crawl_and_login(url):
                 nickname = full_text.strip()
                 nicknames.append(nickname)
             except Exception as e:
-                print(f"닉네임 추출 중 오류 발생: {e}")
+                logging.error(f"닉네임 추출 중 오류 발생: {e}")
                 nicknames.append("")
 
             try:
@@ -180,7 +192,7 @@ def crawl_and_login(url):
         log_text.insert(tk.END, log_output)
         log_text.config(state="disabled")
 
-        print("블로그 링크가 성공적으로 추출되었습니다.")
+        logging.info("블로그 링크가 성공적으로 추출되었습니다.")
         save_to_excel(blog_ids, nicknames, remarks, blog_links, blog_level, visitors, category)
     finally:
         driver.quit()
@@ -191,15 +203,15 @@ def start_research():
     
     try:
         driver.get("https://lablog.co.kr/")
-        print("연구 사이트로 이동 중...")
+        logging.info("연구 사이트로 이동 중...")
         time.sleep(2)
         
         elements = driver.find_elements(By.CSS_SELECTOR, ".MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-4.css-1udb513")
         if len(elements) >= 3:
             elements[2].click()
-            print("세 번째 버튼 클릭 완료.")
+            logging.info("세 번째 버튼 클릭 완료.")
         else:
-            print("요소를 찾을 수 없습니다.")
+            logging.error("요소를 찾을 수 없습니다.")
             goto_blog_diagnosis(driver)
             return
 
@@ -211,22 +223,22 @@ def start_research():
                 driver.switch_to.window(handle)
                 break
         else:
-            print("새 창이 열리지 않았습니다.")
+            logging.error("새 창이 열리지 않았습니다.")
             return
 
-        print("새 창으로 전환 완료.")
+        logging.info("새 창으로 전환 완료.")
         time.sleep(2)
 
         email_input = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "identifier"))
         )
-        email_input.send_keys('marketing11111111111@gmail.com')
+        email_input.send_keys(LOGIN_EMAIL)
         email_input.send_keys(Keys.RETURN)
-        print("이메일 입력 및 제출 완료.")
+        logging.info("이메일 입력 및 제출 완료.")
 
         WebDriverWait(driver, 20).until(EC.number_of_windows_to_be(1))
         driver.switch_to.window(original_window)
-        print("새 창이 닫혔습니다. 원래 창으로 돌아왔습니다.")
+        logging.info("새 창이 닫혔습니다. 원래 창으로 돌아왔습니다.")
         time.sleep(2)
 
         goto_blog_diagnosis(driver)
@@ -241,23 +253,23 @@ def goto_blog_diagnosis(driver):
             EC.element_to_be_clickable((By.XPATH, "//*[text()='다시보지않기']"))
         )
         dont_show_again_button.click()
-        print("다시보지않기 버튼 클릭 완료.")
+        logging.info("다시보지않기 버튼 클릭 완료.")
     except Exception:
-        print("다시보지않기 버튼이 없습니다. 진행합니다.")
+        logging.info("다시보지않기 버튼이 없습니다. 진행합니다.")
 
     # "블로그 진단" 버튼을 찾아 클릭
     blog_diagnosis_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//*[text()='블로그 진단']"))
     )
     blog_diagnosis_button.click()
-    print("블로그 진단 버튼 클릭 완료.")
+    logging.info("블로그 진단 버튼 클릭 완료.")
 
     # 입력 필드 초기화 및 값 입력 반복
     input_field = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputSizeSmall.css-2ozrrz"))
     )
     input_field.click()  # 입력 필드 클릭
-    print("입력 필드 클릭 완료.")
+    logging.info("입력 필드 클릭 완료.")
 
     # 로그에서 블로그 ID 목록 가져오기
     log_items = log_text.get("1.0", tk.END).strip().split("\n")
@@ -279,20 +291,20 @@ def goto_blog_diagnosis(driver):
 
         # 블로그 ID 입력
         input_field.send_keys(item)
-        print(f"'{item}' 입력 완료.")
+        logging.info(f"'{item}' 입력 완료.")
 
         # 진단 버튼 클릭
         action_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, ".MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-fullWidth.css-9nd1ol"))
         )
         action_button.click()
-        print("액션 버튼 클릭 완료.")
+        logging.info("액션 버튼 클릭 완료.")
 
         # 로딩바가 사라질 때까지 대기
         WebDriverWait(driver, 60).until_not(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".MuiLinearProgress-root.MuiLinearProgress-colorSecondary.MuiLinearProgress-determinate.css-1hbgb9z"))
         )
-        print("진단 완료 후 데이터 추출 준비")
+        logging.info("진단 완료 후 데이터 추출 준비")
 
         # 데이터 추출
         try:
@@ -311,18 +323,18 @@ def goto_blog_diagnosis(driver):
                 category.append(category_value)
 
         except Exception as e:
-            print(f"데이터 추출 중 오류 발생: {e}")
+            logging.error(f"데이터 추출 중 오류 발생: {e}")
             # 만약 추출이 실패하면 "N/A" 추가하고, 해당 ID를 실패 목록에 추가
             blog_level.append("N/A")
             visitors.append("N/A")
             category.append("N/A")
             failed_items.append(item)
 
-        print(f"지수: {blog_level[-1]}, 방문자수: {visitors[-1]}, 블로그주제: {category[-1]}")
+        logging.info(f"지수: {blog_level[-1]}, 방문자수: {visitors[-1]}, 블로그주제: {category[-1]}")
 
     # 실패한 ID들을 다시 시도
     for item in failed_items:
-        print(f"재시도 중: {item}")
+        logging.info(f"재시도 중: {item}")
         input_field.click()
 
         # 필드 초기화 (3초 동안 백스페이스 누름)
@@ -332,20 +344,20 @@ def goto_blog_diagnosis(driver):
 
         # 블로그 ID 입력
         input_field.send_keys(item)
-        print(f"'{item}' 재시도 입력 완료.")
+        logging.info(f"'{item}' 재시도 입력 완료.")
 
         # 진단 버튼 클릭
         action_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, ".MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-fullWidth.css-9nd1ol"))
         )
         action_button.click()
-        print("재시도 액션 버튼 클릭 완료.")
+        logging.info("재시도 액션 버튼 클릭 완료.")
 
         # 로딩바가 사라질 때까지 대기
         WebDriverWait(driver, 60).until_not(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".MuiLinearProgress-root.MuiLinearProgress-colorSecondary.MuiLinearProgress-determinate.css-1hbgb9z"))
         )
-        print("진단 완료 후 재시도 데이터 추출 준비")
+        logging.info("진단 완료 후 재시도 데이터 추출 준비")
 
         # 데이터 추출
         try:
@@ -364,7 +376,7 @@ def goto_blog_diagnosis(driver):
                 category[log_items.index(item)] = category_value
 
         except Exception as e:
-            print(f"재시도 데이터 추출 중 오류 발생: {e}")
+            logging.error(f"재시도 데이터 추출 중 오류 발생: {e}")
             blog_level[log_items.index(item)] = "N/A"
             visitors[log_items.index(item)] = "N/A"
             category[log_items.index(item)] = "N/A"
