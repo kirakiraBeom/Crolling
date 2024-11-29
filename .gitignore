@@ -4,3 +4,6 @@
 # Ignore build and dist folders
 build/
 dist/
+
+# Ignore sensitive JSON files
+google_sheets_key.json
