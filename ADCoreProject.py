@@ -112,10 +112,10 @@ def fetch_creative_stats(creative_ids):
     response.raise_for_status()
     return response.json()
 
-# 중복 제거 함수
-def remove_duplicates(data):
+# 중복 제거 함수 (광고그룹 변경 시 캠페인 이름 표시)
+def remove_duplicates_with_group_check(data):
     """
-    연속된 중복 캠페인 이름과 광고그룹 이름을 제거합니다.
+    연속된 중복 캠페인 이름을 제거하지만, 광고그룹이 변경되면 다시 캠페인 이름을 표시합니다.
     :param data: 성과 데이터 리스트
     :return: 중복 제거된 데이터 리스트
     """
@@ -123,17 +123,26 @@ def remove_duplicates(data):
     previous_adgroup = None
 
     for row in data:
-        # 캠페인 이름 중복 제거
-        if row["campaignName"] == previous_campaign:
-            row["campaignName"] = ""  # 중복되면 캠페인 이름 비움
+        # 광고그룹 변경 시 캠페인 이름 표시
+        if row["adgroupName"] != previous_adgroup:
+            # 광고그룹이 달라지면 캠페인 이름 유지
+            previous_adgroup = row["adgroupName"]
         else:
-            previous_campaign = row["campaignName"]
+            # 광고그룹이 같으면 캠페인 이름 비움
+            row["campaignName"] = ""
 
         # 광고그룹 이름 중복 제거
         if row["adgroupName"] == previous_adgroup:
-            row["adgroupName"] = ""  # 중복되면 광고그룹 이름 비움
+            if row["campaignName"] == "":
+                row["adgroupName"] = ""
         else:
             previous_adgroup = row["adgroupName"]
+
+        # 캠페인 이름 처리
+        if row["campaignName"] == previous_campaign:
+            row["campaignName"] = ""
+        else:
+            previous_campaign = row["campaignName"]
 
     return data
 
@@ -154,7 +163,7 @@ def save_to_google_sheets(data):
     ])
 
     # 중복 제거
-    cleaned_data = remove_duplicates(data.get("data", []))
+    cleaned_data = remove_duplicates_with_group_check(data.get("data", []))
 
     # 데이터를 한번에 추가
     rows = []
@@ -175,7 +184,6 @@ def save_to_google_sheets(data):
             entry.get("cpConv", 0)  # 전환당비용
         ])
     sheet.append_rows(rows, value_input_option="RAW")
-
 
 # 메인 실행
 if __name__ == "__main__":
