@@ -1,0 +1,170 @@
+<!--@layout(/layout/basic/layout.html)-->
+<!--@js(/moa/js/lib/sample-login.js)-->
+<head>
+    <link rel="stylesheet" href="login.css" />
+    <script>
+        // placeholder
+        $(document).ready(function () {
+            function loginPlaceholder() {
+                if ($(".xans-member-login").val() != undefined) {
+                    var loginId = $("#member_id").parent().attr("title");
+                    $("#member_id").attr("placeholder", loginId);
+                    $("#member_passwd").attr("placeholder", "Password");
+                    $("#order_name").attr("placeholder", "주문자명");
+                    $("#order_id").attr("placeholder", '주문번호 (하이픈 "-" 포함)');
+                    $("#order_password").attr("placeholder", "비회원주문 비밀번호");
+                }
+            }
+            loginPlaceholder();
+        });
+
+        // keyboard
+        $(".keyboard button").click(function () {
+            if ($(this).hasClass("selected") == true) {
+                $(".keyboard .btnKey").removeClass("selected");
+                $(".view div").hide();
+            } else {
+                $(".keyboard .btnKey").removeClass("selected");
+                $(".view div").hide();
+                $(this).addClass("selected");
+                var key = $(this).attr("title");
+                $(this)
+                    .parent()
+                    .next()
+                    .children("." + key + "")
+                    .show();
+            }
+        });
+
+        // toggle
+        $(".ec-base-tab").each(function () {
+            var selected = $(this).find("> ul > li.selected > a");
+        });
+
+        $("body").delegate(".ec-base-tab a", "click", function (e) {
+            var _target = $(this).attr("href");
+            if (_target == "#member") {
+                $("#member_login_module_id").show();
+                $("#order_history_nologin_id").hide();
+            } else {
+                $("#member_login_module_id").hide();
+                $("#order_history_nologin_id").show();
+            }
+            e.preventDefault();
+        });
+    </script>
+</head>
+
+<div class="mcl">
+    <div class="mcl__header flex flex--v-center">
+        <button class="mcl__back-btn flex flex--v-center flex--h-center" onclick="history.go(-1);return false;"></button>
+        <a href="/" class="mcl__home">메인으로 가기</a>
+    </div>
+
+    <div class="mcl__title text-center">
+        <h2>로그인</h2>
+        <p>
+            카카오톡 플러스 친구 추가해서<br />
+            적립금 1000원 받아가세요~
+        </p>
+    </div>
+
+    <div module="member_login">
+        <div class="login__sns fake-sns-login displaynone">
+            <a href="#none" class="jsSampleBtn btnKakao" onclick="{$kakao_func_login}">카카오 1초 로그인/회원가입</a>
+        </div>
+        <div class="login__sns" style="display: none">
+            <a href="#none" class="btnKakao {$display_kakao|display}" onclick="{$kakao_func_login}">카카오 1초 로그인/회원가입</a>
+        </div>
+
+        <div class="mcl-banner" df-banner-code="login-banner" hidden>
+            <div class="mcl-banner__item relative" df-banner-clone>
+                <a href="{#href}" target="{#target}"> </a>
+            </div>
+        </div>
+
+        <div class="mcl-or relative"><span></span></div>
+    </div>
+
+    <div module="member_login" class="gInnerMargin" id="{$member_login_module_id}">
+        <!--@css(/css/module/member/login.css)-->
+        <!--@js(/js/module/member/login.js)-->
+        <!--
+            $defaultReturnUrl = /index.html
+            $forbidIpUrl = member/adminFail.html
+        -->
+
+        <div class="login">
+            <div class="ec-base-tab typeNav gFlex {$member_login_tab_display|display}">
+                <ul class="menu">
+                    <li class="selected"><a href="#member">기존 회원</a></li>
+                    <li><a href="#noMember">비회원 배송조회</a></li>
+                </ul>
+            </div>
+            <fieldset class="form">
+                <legend>회원로그인</legend>
+                <label class="id ePlaceholder" title="{$login_id_type_text}">{$form.member_id}</label>
+                <label class="password ePlaceholder" title="비밀번호">{$form.member_passwd}</label>
+                <p class="login__security">
+                    {$form.member_check_save_id}
+                    <span class="secret">{$form.member_check_secret_connect}</span>
+                </p>
+                <div class="login__button">
+                    <a href="#none" class="btnSubmit gFull sizeL" onclick="{$action_func_login}">로그인</a>
+                    <a href="{$returnUrl}" onclick="{$action_nomember_order}" class="btnNormal gFull sizeL {$display_nomember|display}">비회원 구매</a>
+                </div>
+                <ul class="login__util">
+                    <li><a href="/member/id/find_id.html">아이디 찾기</a></li>
+                    <li><a href="/member/passwd/find_passwd_info.html">비밀번호 찾기</a></li>
+                    <li><a href="/member/join.html">회원가입</a></li>
+                </ul>
+                <div class="login__sns">
+                    <a href="#none" class="btnKakao {$display_kakao|display}" onclick="{$kakao_func_login}">카카오 1초 로그인/회원가입</a>
+                    <a href="#none" class="btnNaver {$display_naver|display}" onclick="{$naver_func_login}">네이버 로그인</a>
+                    <a href="#none" class="btnFacebook {$display_facebook|display}" onclick="{$facebook_func_login}">Facebook으로 로그인</a>
+                    <a href="#none" class="btnLine {$display_line|display}" onclick="{$line_func_login}">LINE 로그인</a>
+                    <a href="#none" class="btnGoogle {$display_google|display}" onclick="{$google_func_login}">Google 로그인</a>
+                    <a href="#none" class="btnApple {$display_apple|display}" onclick="{$apple_func_login}">Apple 로그인</a>
+                </div>
+                <div class="login__sns fake-sns-login displaynone">
+                    <a href="#none" class="jsSampleBtn btnNaver" onclick="{$naver_func_login}">네이버 로그인</a>
+                    <a href="#none" class="jsSampleBtn btnFacebook" onclick="{$facebook_func_login}">Facebook 로그인</a>
+                    <a href="#none" class="jsSampleBtn btnGoogle" onclick="{$google_func_login}">Google 로그인</a>
+                    <a href="#none" class="jsSampleBtn btnApple" onclick="{$apple_func_login}">Apple 로그인</a>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <div module="MyShop_OrderHistoryNologin" id="order_history_nologin_id" class="gInnerMargin">
+        <!--@css(/css/module/myshop/orderHistoryNologin.css)-->
+        <!--
+            $orderDetailUrl = /myshop/order/list.html
+        -->
+        <div class="login">
+            <div class="ec-base-tab typeNav gFlex">
+                <ul class="menu">
+                    <li><a href="#member">기존 회원</a></li>
+                    <li class="selected"><a href="#noMember">비회원 배송조회</a></li>
+                </ul>
+            </div>
+            <div class="form">
+                {$form.order_name} {$form.order_id} {$form.order_password}
+                <div class="login__button">
+                    <button type="submit" class="btnSubmit gFull sizeL">비회원 배송조회</button>
+                    <a href="/member/join.html" class="btnNormal gFull sizeL">회원가입</a>
+                </div>
+                <p class="txtInfo typeDot">비회원의 경우, 주문시의 주문번호로 주문조회가 가능합니다.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sample-name" class="displaynone" module="Layout_LogoTop">{$mall_name}</div>
+
+<!-- 해당 스크립트 삭제에 유의 부탁드리며, 스냅 솔루션의 스크립트입니다. -->
+<!---- snappush  start contact mail: support@snapvi.co.kr --->
+<div id="spm_page_type" style="display: none">sq_login_page</div>
+<script async type="text/javascript" src="//cdn.snapfit.co.kr/js/spm_f_common.js" charset="utf-8"></script>
+<div id="spm_banner_main"></div>
+<!---- snappush  end -->

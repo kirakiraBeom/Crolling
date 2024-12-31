@@ -1,7 +1,3 @@
-# https://xn--939au0g4vj8sq.net/rq/?k=MTU1NDYwNg==
-# https://xn--939au0g4vj8sq.net/rq/?k=MTU2NzYwMA==
-# https://xn--939au0g4vj8sq.net/rq/?k=MTU2OTQxNQ==
-
 import tkinter as tk
 from tkinter import font, scrolledtext
 from selenium import webdriver
@@ -17,6 +13,11 @@ import openpyxl
 import datetime
 import re
 import logging
+import os
+import shutil
+from webdriver_manager.chrome import ChromeDriverManager
+import ctypes
+import sys
 
 logging.basicConfig(
     level=logging.INFO,
@@ -24,19 +25,74 @@ logging.basicConfig(
 )
 
 # 파일 상단에 상수 정의
-CHROME_DRIVER_PATH = "C:\\Program Files\\SeleniumBasic\\chromedriver.exe"
-USER_DATA_DIR = "C:\\VCP"
+CHROME_DRIVER_PATH = r"C:\Program Files\SeleniumBasic\chromedriver.exe"
+USER_DATA_DIR = r"C:\VCP"
 LOGIN_EMAIL = "marketing11111111111@gmail.com"
-PASSWORD = "3605"
+TARGET_DIR = r"C:\Program Files\SeleniumBasic"
+
+# 관리자 권한 확인 함수
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
+
+# 확인 메시지 창 표시 함수
+def show_message(title, text):
+    ctypes.windll.user32.MessageBoxW(0, text, title, 0x40)
+
+# 크롬 드라이버 자동 업데이트 함수
+def update_chrome_driver():
+    try:
+        # webdriver-manager로 크롬 드라이버 다운로드
+        driver_path = ChromeDriverManager().install()
+        print(f"다운로드된 드라이버 위치: {driver_path}")
+
+        # 지정된 경로로 복사 준비
+        if not os.path.exists(TARGET_DIR):
+            os.makedirs(TARGET_DIR)
+
+        target_path = os.path.join(TARGET_DIR, "chromedriver.exe")
+
+        # 기존 파일이 있으면 삭제
+        if os.path.exists(target_path):
+            os.remove(target_path)
+            print(f"기존 드라이버 파일을 삭제했습니다: {target_path}")
+
+        # 새 드라이버 복사
+        shutil.copy(driver_path, target_path)
+        print(f"크롬 드라이버가 성공적으로 업데이트되었습니다! 위치: {target_path}")
+
+        # 확인 메시지 표시
+        show_message("업데이트 완료", f"크롬 드라이버가 성공적으로 업데이트되었습니다.\n위치: {target_path}")
+
+    except Exception as e:
+        error_message = f"드라이버 업데이트 중 오류가 발생했습니다:\n{e}"
+        print(error_message)
+        show_message("업데이트 오류", error_message)
+
+# 드라이버 업데이트 실행 함수
+def on_update_driver():
+    if not is_admin():
+        # 관리자 권한으로 스크립트를 재실행
+        print("관리자 권한이 필요합니다. 프로그램을 다시 실행합니다...")
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", sys.executable, __file__, None, 1
+        )
+        sys.exit()
+
+    threading.Thread(target=update_chrome_driver).start()
 
 # 크롬 드라이버 설정
-driver_path = CHROME_DRIVER_PATH
-service = Service(driver_path)
+service = Service(CHROME_DRIVER_PATH)
 chrome_options = Options()
 
 # 데이터 기억 옵션 추가
 chrome_options.add_argument("user-data-dir=" + USER_DATA_DIR)  # 사용자 데이터 디렉토리 설정
 chrome_options.add_argument("disable-blink-features=AutomationControlled")
+
+# 비밀번호 저장 변수
+password = ""
 
 # 초기 엑셀 파일 저장 함수
 def save_to_excel(blog_ids, nicknames, remarks, blog_links, blog_level, visitors, category):
@@ -90,6 +146,7 @@ def save_to_excel(blog_ids, nicknames, remarks, blog_links, blog_level, visitors
     wb.save(filename)
     logging.info(f"엑셀 파일 '{filename}'에 데이터가 저장되었습니다.")
 
+
 # 진단 데이터 덮어쓰기 함수
 def update_excel_with_diagnosis(blog_level, visitors, category):
     wb = openpyxl.load_workbook(filename)
@@ -134,7 +191,6 @@ def extract_blog_id(url):
         return match.group(1)
     else:
         return url.rstrip('/').split('/')[-1]
-
 # 크롤링 및 로그인 함수
 def crawl_and_login(url):
     driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -145,13 +201,14 @@ def crawl_and_login(url):
         logging.info("비밀번호 입력 필드가 로드되었습니다.")
 
         text_input = driver.find_element(By.CSS_SELECTOR, 'input[type="password"]')
-        text_input.send_keys(PASSWORD)
+        text_input.send_keys(password)
         logging.info("비밀번호 입력 완료.")
         text_input.send_keys(Keys.RETURN)
         logging.info("비밀번호 제출 중...")
 
         time.sleep(5)
 
+        # 나머지 크롤링 코드 유지
         blog_links = []
         blog_ids = []
         nicknames = []
@@ -159,6 +216,14 @@ def crawl_and_login(url):
         blog_level = []
         visitors = []
         category = []
+
+        while True:
+            try:
+                more_button = driver.find_element(By.CSS_SELECTOR, "button.more_btn#more_ask_li")
+                more_button.click()
+                time.sleep(2)
+            except Exception:
+                break
 
         blog_elements = driver.find_elements(By.CSS_SELECTOR, "a.sns_btn")
         for link_element in blog_elements:
@@ -186,7 +251,7 @@ def crawl_and_login(url):
             except Exception:
                 remarks.append("")
 
-        log_output = "\n".join(blog_ids)
+        log_output = "\n".join([f"{i+1}. {blog_id}" for i, blog_id in enumerate(blog_ids)])
         log_text.config(state="normal")
         log_text.delete(1.0, tk.END)
         log_text.insert(tk.END, log_output)
@@ -196,6 +261,9 @@ def crawl_and_login(url):
         save_to_excel(blog_ids, nicknames, remarks, blog_links, blog_level, visitors, category)
     finally:
         driver.quit()
+
+# 제출 버튼 클릭 시 호출되는 함수
+
 
 # 연구 시작 함수
 def start_research():
@@ -289,9 +357,12 @@ def goto_blog_diagnosis(driver):
         while time.time() - start_time < 3:
             input_field.send_keys(Keys.BACKSPACE)
 
-        # 블로그 ID 입력
-        input_field.send_keys(item)
-        logging.info(f"'{item}' 입력 완료.")
+        # 숫자와 점을 제거하고 순수 ID만 추출
+        clean_id = item.split(". ", 1)[1] if ". " in item else item
+        
+        # 정제된 ID 입력
+        input_field.send_keys(clean_id)
+        logging.info(f"'{clean_id}' 입력 완료.")
 
         # 진단 버튼 클릭
         action_button = WebDriverWait(driver, 10).until(
@@ -308,10 +379,45 @@ def goto_blog_diagnosis(driver):
 
         # 데이터 추출
         try:
-            level_element = driver.find_element(By.CSS_SELECTOR, "text.apexcharts-datalabel")
-            blog_level_text = level_element.text.split(": ")[1] if ": " in level_element.text else "N/A"
-            blog_level.append(blog_level_text)
+            # 지수 추출 부분 수정
+            try:
+                # 여러 셀렉터 시도
+                level_element = None
+                selectors = [
+                    "text.apexcharts-datalabel",
+                    ".apexcharts-datalabel text",
+                    "g.apexcharts-datalabel-label text"
+                ]
+                
+                for selector in selectors:
+                    try:
+                        level_element = WebDriverWait(driver, 5).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+                        )
+                        if level_element:
+                            break
+                    except:
+                        continue
+                        
+                if level_element:
+                    blog_level_text = level_element.text
+                    if ": " in blog_level_text:
+                        blog_level_text = blog_level_text.split(": ")[1]
+                    elif ":" in blog_level_text:
+                        blog_level_text = blog_level_text.split(":")[1]
+                    else:
+                        blog_level_text = blog_level_text.strip()
+                else:
+                    blog_level_text = "N/A"
+                    
+                logging.info(f"추출된 블로그 지수: {blog_level_text}")
+                blog_level.append(blog_level_text)
+                    
+            except Exception as e:
+                logging.error(f"지수 추출 중 오류 발생: {e}")
+                blog_level.append("N/A")
 
+            # 기존 방문자수와 카테고리 추출 코드는 그대로 유지
             visitor_elements = driver.find_elements(By.CSS_SELECTOR, ".MuiFormControl-root.MuiFormControl-fullWidth.MuiTextField-root.css-ciaeuc")
             if len(visitor_elements) >= 7:
                 visitor_value = visitor_elements[6].find_element(By.CSS_SELECTOR, "input").get_attribute("value")
@@ -342,9 +448,12 @@ def goto_blog_diagnosis(driver):
         while time.time() - start_time < 3:
             input_field.send_keys(Keys.BACKSPACE)
 
-        # 블로그 ID 입력
-        input_field.send_keys(item)
-        logging.info(f"'{item}' 재시도 입력 완료.")
+        # 숫자와 점을 제거하고 순수 ID만 추출
+        clean_id = item.split(". ", 1)[1] if ". " in item else item
+        
+        # 정제된 ID 입력
+        input_field.send_keys(clean_id)
+        logging.info(f"'{clean_id}' 재시도 입력 완료.")
 
         # 진단 버튼 클릭
         action_button = WebDriverWait(driver, 10).until(
@@ -383,19 +492,20 @@ def goto_blog_diagnosis(driver):
 
     # 추출된 데이터 업데이트
     update_excel_with_diagnosis(blog_level, visitors, category)
-
 def on_submit():
+    global password
+    password = password_entry.get()
     url = url_entry.get()
     threading.Thread(target=crawl_and_login, args=(url,)).start()
 
 # 연구 시작 스레드 함수
 def on_start_research():
     threading.Thread(target=start_research).start()
-
+    
 # GUI 설정
 root = tk.Tk()
 root.title("크롤링 프로그램")
-root.geometry("550x550")
+root.geometry("550x650")
 root.configure(bg="#f0f0f0")
 
 # 창 크기 고정
@@ -414,8 +524,17 @@ url_label.pack(pady=5)
 url_entry = tk.Entry(root, width=40, font=label_font)
 url_entry.pack(pady=5)
 
+password_label = tk.Label(root, text="비밀번호를 입력하세요:", font=label_font, bg="#f0f0f0", fg="#333")
+password_label.pack(pady=5)
+
+password_entry = tk.Entry(root, width=40, font=label_font, show="*")
+password_entry.pack(pady=5)
+
 submit_button = tk.Button(root, text="제출", command=on_submit, font=button_font, bg="#4CAF50", fg="white", padx=10, pady=5)
 submit_button.pack(pady=20)
+
+update_driver_button = tk.Button(root, text="크롬 드라이버 업데이트", command=on_update_driver, font=button_font, bg="#FF5733", fg="white", padx=10, pady=5)
+update_driver_button.pack(pady=10)
 
 log_label = tk.Label(root, text="추출한 블로그ID:", font=label_font, bg="#f0f0f0", fg="#333")
 log_label.pack(pady=5)

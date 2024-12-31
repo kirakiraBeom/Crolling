@@ -1,0 +1,311 @@
+<!-- 해당 스크립트 삭제에 유의 부탁드리며, 스냅 솔루션의 스크립트입니다. -->
+<!-- snap common script contact mail: support@snapvi.co.kr -->
+<span id = 'solutiontype' style='display:none;'>cafe24</span>
+<span id='sfsnapfit_store_id' style='display:none'>benauto</span>
+<div><input id="sf_draw_type" type="hidden" value="responsive"><input id="sf_store_name" type = 'hidden' value = 'benauto'></div>
+<div module="Layout_statelogon" style="display: none">
+<span id="sf_user_name" class="xans-member-var-id" style="display:none;">{$id}</span>
+<span id="sf_group_name" class="xans-member-var-group_name" style="display:none;">{$group_name}</span>
+<span id="sf_member_name" class="xans-member-var-name" style="display:none;">{$name}</span>
+</div>
+<!-- snap common end -->
+
+<header class="header relative">
+    
+    <div class="header__wrap jsHeader">
+        
+        <div class="header__top relative">
+
+            
+            <div class="container flex flex--v-center ">
+                
+
+                <div class="header__hamburger display-m jsHamburger"style="display: flex; align-items: center; ">
+                    <!--@import(/moa/icon/icon_hamburger.html)-->
+                </div>
+                <div style="width: 10px;"></div>
+
+                    <div class="other__menu display-m jsSearchBtn" style="display: flex; align-items: center; ">
+                            <img src="/moa/img/icon/icon_search.svg" class="seach-icon-img"><img src="/moa/img/icon/icon_x.svg" class="seach-icon-x-img">
+                            
+                        </div>
+
+                <div module="Layout_footer" class="displaynone chk-moa" data-chk="{$fax}"></div>
+                <!--@import(/moa/import/top_logo.html)-->
+                
+                <div class="header-top__right display-pc">
+                    <ul class="flex flex--v-center">
+                        <!-- 🔽 주문조회 메뉴 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                        <li class="header-top__menu flex flex--v-center">
+                            <!-- 메뉴명 작성란 -->
+                            <a href="/myshop/order/list.html" class="header-top__link">주문조회</a>
+                        </li>
+                        <!-- 🔼 주문조회 메뉴 -->
+
+                        <!-- 🔽 로그인 메뉴 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                        <li class="header-top__menu flex flex--v-center" module="Layout_statelogoff">
+                            <!-- 메뉴명 작성란 -->
+                            <a href="/member/login.html" class="header-top__link">로그인</a>
+                        </li>
+                        <!-- 🔼 로그인 메뉴 -->
+                        
+                        <!-- 🔽 회원가입 메뉴 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                        <li class="header-top__menu flex flex--v-center relative" module="Layout_statelogoff">
+                            <!-- 메뉴명 작성란 -->
+                            <a href="/member/join.html" class="header-top__link">회원가입</a>
+
+                            <!-- 🔽 회원가입 포인트 아이콘 : 관리자 > 앱 > 배너매니저앱에서 관리해주세요. -->
+                            <span class="user-menu jsLoginPopBtn" df-banner-code="join-point" hidden>
+                                <a class="join-benefit eng-font" href="{#href}" target="{#target}" df-banner-clone>{#title}</a>
+                            </span>
+
+                        </li>
+                        <!-- 🔼 회원가입 메뉴 -->
+
+                        <!-- 🔽 마이페이지 메뉴 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                        <li class="header-top__menu flex flex--v-center" module="Layout_statelogon">
+                            <!-- 메뉴명 작성란 -->
+                            <a href="/myshop/index.html" class="header-top__link">마이페이지</a>
+                        </li>
+                        <!-- 🔼 마이페이지 메뉴 -->
+
+                        <!-- 🔽 로그아웃 메뉴 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                        <li class="header-top__menu flex flex--v-center" module="Layout_statelogon">
+                            <!-- 메뉴명 작성란 -->
+                            <a href="{$action_logout}" class="header-top__link">로그아웃</a>
+                        </li>
+                        <!-- 🔼 로그아웃 메뉴 -->
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="header__bottom relative">
+            <div class="container relative flex flex--v-center">
+             
+               <!--@import(/moa/import/top_logo.html)-->
+              
+               <!-- 카테고리 -->
+                <div class="category swiper-container jsHCateSlide" module="Layout_category">
+                    <ul class="category__list flex flex--v-center swiper-wrapper">
+                       
+         <!--          <!-- 🔽 브랜드 소개 메뉴 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+         <!--           <li class="category__item flex flex--v-center">
+         <!--               <!-- 메뉴명 작성란 -->
+         <!--                <a href="/about.html" class="category__link">브랜드 소개</a>
+         <!--            </li>
+                        <!-- 🔼 브랜드 소개 메뉴 -->
+
+                        <!-- 🔽 상품 카테고리 : 쇼핑몰 관리자 페이지에서 설정하신 분류와 자동 연동 됩니다. (매뉴얼 참고) -->
+                        
+                        
+                        <li class="category__item flex flex--v-center jsPrdCate" data-name="{$name}"><a href="{$link_product_list}" class="category__link eng-font">{$name_or_img_tag}</a></li>
+                        <li class="category__item flex flex--v-center jsPrdCate" data-name="{$name}"><a href="{$link_product_list}" class="category__link eng-font">{$name_or_img_tag}</a></li>
+                        <li class="category__item flex flex--v-center jsPrdCate" data-name="{$name}"><a href="{$link_product_list}" class="category__link eng-font">{$name_or_img_tag}</a></li>
+                        <li class="category__item flex flex--v-center jsPrdCate" data-name="{$name}"><a href="{$link_product_list}" class="category__link eng-font">{$name_or_img_tag}</a></li>
+                        <li class="category__item flex flex--v-center jsPrdCate" data-name="{$name}"><a href="{$link_product_list}" class="category__link eng-font">{$name_or_img_tag}</a></li>
+                        
+                        <!-- 🔼 상품 카테고리 -->
+                        
+          <!--         <!-- 🔽 리뷰 메뉴 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+          <!--              <li class="category__item flex flex--v-center">
+          <!--              <!-- 메뉴명 작성란 -->
+          <!--              <a href="/board/review/list_photo.html?board_no=4" class="category__link">리뷰</a>
+          <!--         </li> 
+                        <!-- 🔼 리뷰 메뉴 -->
+
+                        <!-- 🔽 이벤트 메뉴 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+          <!--          	 <li class="category__item flex flex--v-center"> -->
+                            <!-- 메뉴명 작성란 -->
+                            <!-- <a href="/event/list.html?cate_no=59" class="category__link">이벤트</a> -->
+
+                            <!-- 🔽 하위 카테고리 -->
+                            <div class="sub-category">
+                                <ul class="sub-category__list">
+
+                                    <!-- 🔽 진행중인 이벤트 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                                    <li class="sub-category__item">
+                                        <!-- 메뉴명 작성란 -->
+                                        <a href="/event/list.html?cate_no=59" class="sub-category__link">진행중인 이벤트</a>
+                                    </li>
+                                    <!-- 🔼 진행중인 이벤트 -->
+
+                                    <!-- 🔽 출석체크 : 관리자 > 프로모션 > 출석체크 이벤트를 설정하시면 자동 노출됩니다. -->
+                                    <li class="sub-category__item" module="Layout_attendBanner">
+                                        <!--
+                                            $stamp_type_url = /attend/stamp.html
+                                            $comment_type_url = /attend/comment.html
+                                        -->
+                                        <!-- 메뉴명 작성란 -->
+                                        <a href="{$attend_url}" class="sub-category__link">출석체크</a>
+                                    </li>
+                                    <!-- 🔼 출석체크 -->
+
+                                </ul>
+                            </div>
+                            <!-- 🔼 하위 카테고리 -->
+                        </li>
+                        <!-- 🔼 이벤트 메뉴 -->
+
+              <!--     <!-- 🔽 매거진 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+              <!--    <li class="category__item flex flex--v-center">
+              <!--         <!-- 메뉴명 작성란 -->
+              <!--         <a href="/board/gallery/list.html?board_no=8" class="category__link">매거진</a>
+              <!--     </li>
+                        <!-- 🔼 매거진 -->
+
+                        <!-- 🔽 고객센터 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->                        
+                        <li class="category__item flex flex--v-center category__item--board">
+                            <!-- 메뉴명 작성란 -->
+                            <a href="/board/free/list.html?board_no=1" class="category__link">고객센터</a>
+
+                            <!-- 🔽 게시판 하위 카테고리 : 게시판 카테고리는 게시판 카테고리와 자동연동 됩니다. -->
+                            <div module="Layout_BoardInfo" class="sub-category">
+                                <ul class="sub-category__list">
+                                    <li class="sub-category__item"><a href="{$board_list_url}" class="sub-category__link">{$board_name}</a></li>
+                                    <li class="sub-category__item"><a href="{$board_list_url}" class="sub-category__link">{$board_name}</a></li>
+                                </ul>
+                            </div>
+                            <!-- 🔼 게시판 하위 카테고리 -->
+
+                        </li>
+                        <!-- 🔼 고객센터 -->
+
+                    </ul>
+                </div>
+                
+                <!-- 🔽 우측 검색&아이콘 메뉴 -->
+                <div class="other flex flex--v-center">
+                    <ul class="other__list flex flex--v-center">
+
+                        <!-- 🔽 검색 메뉴 -->
+                        <li class="other__menu display-pc jsSearchBtn" style="margin-right: 15px;">
+                            <img src="/moa/img/icon/icon_search.svg" class="seach-icon-img"><img src="/moa/img/icon/icon_x.svg" class="seach-icon-x-img">
+                        </li>
+                        <!-- 🔼 검색 메뉴 -->
+
+                        <!-- 🔽 마이페이지 메뉴 -->
+                        <li class="other__menu display relative">
+                            <a href="/myshop/index.html" class="other__link other__link--hasChild"><img src="/moa/img/icon/icon_user.svg" ></a>
+                            
+
+                            <!-- 🔽 하위 카테고리 -->
+                            <div class="sub-category sub-category--s">
+                                <ul class="sub-category__list">
+
+                                    <!-- 🔽 마이페이지 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                                    <li class="sub-category__item">
+                                        <!-- 메뉴명 작성란 -->
+                                        <a href="/myshop/index.html" class="sub-category__link">마이페이지</a>
+                                    </li>
+                                    <!-- 🔼 마이페이지 -->
+
+                                    <!-- 🔽 주문/배송조회 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                                    <li class="sub-category__item">
+                                        <!-- 메뉴명 작성란 -->
+                                        <a href="/myshop/order/list.html" class="sub-category__link">주문/배송조회</a>
+                                    </li>
+                                    <!-- 🔼 주문/배송조회 -->
+
+                                    <!-- 🔽 최근 본 상품 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                                    <li class="sub-category__item">
+                                        <!-- 메뉴명 작성란 -->
+                                        <a href="/product/recent_view_product.html" class="sub-category__link">최근 본 상품</a>
+                                    </li>
+                                    <!-- 🔼 최근 본 상품 -->
+
+                                    <!-- 🔽 관심상품 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                                    <li class="sub-category__item">
+                                        <!-- 메뉴명 작성란 -->
+                                        <a href="/myshop/wish_list.html" class="sub-category__link">관심상품</a>
+                                    </li>
+                                    <!-- 🔼 관심상품 -->
+
+                                </ul>
+                            </div>
+                            <!-- 🔼 하위 카테고리 -->
+
+                        </li>
+                        <!-- 🔼 마이페이지 메뉴 -->
+                        
+
+                        <li class="other__menu other__menu--cart relative"><a href="/order/basket.html" module="Layout_orderBasketcount" class="other__link"><img src="/moa/img/icon/icon_cart.svg" ><span class="cart-count eng-font">{$basket_count}</span></a></li>
+                        <li class="other__menu other__menu--all-cate display-pc jsAllCateToggle">
+                            <span class="hamburger-bars"></span>
+                            <span class="hamburger-bars"></span>
+                            <span class="hamburger-bars"></span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 🔼 우측 검색&아이콘 메뉴 -->
+                
+            </div>
+        </div>
+
+        <!--@import(/moa/import/search_form.html)-->
+
+        <!-- 🔽 전체 카테고리 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+        <div class="all-c">
+            <div class="all-c__container container">
+              <div class="all-c__inner flex flex--h-center">
+                   <div class="all-c__column">
+                        <ul class="all-c__list flex jsAllCateList"></ul>
+                    </div>
+                    <div class="all-c__column">
+
+                        <!-- 🔽 고객센터 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                        <div class="all-c__title">고객센터</div>
+                        <div class="all-c__other flex">
+
+                            <!-- 🔽 게시판 하위 카테고리 : 게시판 카테고리는 게시판 카테고리와 자동연동 됩니다. -->
+                            <ul class="all-c__child" module="Layout_BoardInfo">
+                                <li class="all-c__child-item"><a href="{$board_list_url}" class="all-c__child-link">{$board_name}</a></li>
+                                <li class="all-c__child-item"><a href="{$board_list_url}" class="all-c__child-link">{$board_name}</a></li>
+                            </ul>
+                            <!-- 🔼 게시판 하위 카테고리 -->
+
+                            <ul class="all-c__child">
+
+                                <!-- 🔽 마이페이지 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                                <li class="all-c__child-item">
+                                    <!-- 메뉴명 작성란 -->
+                                    <a href="/myshop/index.html" class="all-c__child-link">마이페이지</a>
+                                </li>
+                                <!-- 🔼 마이페이지 -->
+                                
+                                <!-- 🔽 주문/배송조회 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                                <li class="all-c__child-item">
+                                    <!-- 메뉴명 작성란 -->
+                                    <a href="/myshop/order/list.html" class="all-c__child-link">주문/배송조회</a>
+                                </li>
+                                <!-- 🔼 주문/배송조회 -->
+
+                                <!-- 🔽 최근 본 상품 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                                <li class="all-c__child-item">
+                                    <!-- 메뉴명 작성란 -->
+                                    <a href="/product/recent_view_product.html" class="all-c__child-link">최근 본 상품</a>
+                                </li>
+                                <!-- 🔼 최근 본 상품 -->
+
+                                <!-- 🔽 관심상품 : 메뉴명을 수정하시려면 '메뉴명 작성란'에 원하시는 문구로 수정해주세요. -->
+                                <li class="all-c__child-item">
+                                    <!-- 메뉴명 작성란 -->
+                                    <a href="/myshop/wish_list.html" class="all-c__child-link">관심상품</a>
+                                </li>
+                                <!-- 🔼 관심상품 -->
+
+                            </ul>
+                        </div>
+                        <!-- 🔼 전체 카테고리 -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 🔼 전체 카테고리 -->
+   
+    </div>
+</header>
+<div class="all-cate-bg"></div>
